@@ -14,20 +14,14 @@ class AddTitleToTasklistsTable extends Migration
     public function up()
     {
         Schema::table('tasklists', function (Blueprint $table) {
-            $table->string('title');
-            //
+            $table->string('status', 10);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::table('tasklists', function (Blueprint $table) {
-            $table->dropColumn('title');
+            $table->dropColumn('status');
             //
         });
     }
