@@ -25,5 +25,6 @@
         </table>
     @endif
     {!! link_to_route('tasklists.create', '新規タスクリストの投稿', null, ['class' => 'btn btn-primary']) !!}
-
+   @section('content')
+    @include('users.users', ['users' => $users])
 @endsection
