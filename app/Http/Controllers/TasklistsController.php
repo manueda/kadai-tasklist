@@ -4,23 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Controller;
+
 use App\Tasklist;
+
+use App\User;
 
 class TasklistsController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $tasklists = Tasklist::all();
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $tasklists = $user->tasklists()->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('tasklists.index', [
-            'tasklists' => $tasklists,
-        ]);
+            $data = [
+                'user' => $user,
+                'tasklists' => $tasklists,
+            ];
+            $data += $this->counts($user);
+            return view('tasklists.index', $data);
+        }else {
+            return view('welcome');
+        }
     }
     
     public function show($id)
     {
         $tasklist = Tasklist::find($id);
-
         return view('tasklists.show', [
             'tasklist' => $tasklist,
         ]);
@@ -29,7 +46,6 @@ class TasklistsController extends Controller
     public function create()
     {
         $tasklist = new Tasklist;
-
         return view('tasklists.create', [
             'tasklist' => $tasklist,
         ]);
@@ -42,18 +58,20 @@ class TasklistsController extends Controller
             'content' => 'required|max:191',
         ]);
         
+        $user = \Auth::user();
+    $user->id;
+        
         $tasklist = new Tasklist;
         $tasklist->status = $request->status;
         $tasklist->content = $request->content;
+        $tasklist->user_id = $user->id;
         $tasklist->save();
-
         return redirect('/');
     }
     
      public function edit($id)
     {
         $tasklist = Tasklist::find($id);
-
         return view('tasklists.edit', [
             'tasklist' => $tasklist,
         ]);
@@ -69,7 +87,6 @@ class TasklistsController extends Controller
         $tasklist->status = $request->status;
         $tasklist->content = $request->content;
         $tasklist->save();
-
         return redirect('/');
     }
     
@@ -77,7 +94,6 @@ class TasklistsController extends Controller
     {
         $tasklist = Tasklist::find($id);
         $tasklist->delete();
-
         return redirect('/');
     }
 }
