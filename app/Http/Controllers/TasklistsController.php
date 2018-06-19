@@ -21,6 +21,7 @@ class TasklistsController extends Controller
     {
         $data = [];
         if (\Auth::check()) {
+
             $user = \Auth::user();
             $tasklists = $user->tasklists()->orderBy('created_at', 'desc')->paginate(10);
 
