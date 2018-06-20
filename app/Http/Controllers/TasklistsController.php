@@ -60,7 +60,8 @@ class TasklistsController extends Controller
             'content' => 'required|max:191',
         ]);
         
-    $user->id;
+        $user = \Auth::user();
+        $user->id;
         
         $tasklist = new Tasklist;
         $tasklist->status = $request->status;
