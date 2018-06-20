@@ -43,6 +43,8 @@ class TasklistsController extends Controller
             'tasklist' => $tasklist,
         ]);
         }
+        else{return redirect('/');
+        }
     }
     
     public function create()
